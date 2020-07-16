@@ -241,11 +241,7 @@ async function downloadVideo(videoUrls: string[], outputDirectories: string[], s
         ffmpegCmd.addInput(ffmpegInpt);
         ffmpegCmd.addOutput(ffmpegOutput);
 
-        ffmpegCmd.on('update', (data) => { 
-             const currentChunks = Utils_1.ffmpegTimemarkToChunk(data.out_time);
-             console.info('Remaining chunks: ' + (video.totalChunks - currentChunks));
-             console.info('Download Speed: ' + data.bitrate + '\n');
-             pbar.update(currentChunks, { speed: data.bitrate });
+        ffmpegCmd.on('update', (data) => { const currentChunks = Utils_1.ffmpegTimemarkToChunk(data.out_time); pbar.update(currentChunks, { speed: data.bitrate });
 
         process.on('SIGINT', cleanupFn);
 
