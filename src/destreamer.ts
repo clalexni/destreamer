@@ -241,18 +241,11 @@ async function downloadVideo(videoUrls: string[], outputDirectories: string[], s
         ffmpegCmd.addInput(ffmpegInpt);
         ffmpegCmd.addOutput(ffmpegOutput);
 
-        ffmpegCmd.on('update', (data: any) => {
-            const currentChunks = ffmpegTimemarkToChunk(data.out_time);
-
-            pbar.update(currentChunks, {
-                speed: data.bitrate
-            });
-
-            // Graceful fallback in case we can't get columns (Cygwin/MSYS)
-            if (!process.stdout.columns) {
-                process.stdout.write(`--- Speed: ${data.bitrate}, Cursor: ${data.out_time}\r`);
-            }
-        });
+        ffmpegCmd.on('update', (data) => { 
+             const currentChunks = Utils_1.ffmpegTimemarkToChunk(data.out_time);
+             console.info('Remaining chunks: ' + (video.totalChunks - currentChunks));
+             console.info('Download Speed: ' + data.bitrate + '\n');
+             pbar.update(currentChunks, { speed: data.bitrate });
 
         process.on('SIGINT', cleanupFn);
 
